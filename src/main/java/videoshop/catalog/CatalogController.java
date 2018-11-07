@@ -113,4 +113,5 @@ class CatalogController {
 			return new Comment(getComment(), getRating(), time);
 		}
 	}
+
 }

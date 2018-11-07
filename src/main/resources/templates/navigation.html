@@ -35,6 +35,12 @@
         <a class="item" href="catalog.html" th:href="@{/blurays}" th:text="#{nav.blurayCatalog}">Blu-ray
             Catalog</a>
         <a class="item" href="cart.html" th:href="@{/cart}" th:text="#{nav.cart}">Warenkorb</a>
+        <a class="item" th:href="@{/cart}" sec:authorize="isAuthenticated()" th:text="${session.cart.get().count()}">5</a>
+       <!-- <a class="item" href="cart.html" th:href="@{/cart}" sec:authorize="isAuthenticated()" th:text="${{SessionHolder.getSession().cart().count()}}">0</a>-->
+        <!--<a class="item" href="navigation.html" th:href="@{/navigation}" th:text="${{nav.all}}">anzahl</a>-->
+
+
+
 
         <div class="right menu">
             <a class="item" th:href="@{/login}" sec:authorize="!isAuthenticated()" th:text="#{nav.login}">Login</a>

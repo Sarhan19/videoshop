@@ -50,6 +50,8 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 @PreAuthorize("isAuthenticated()")
 @SessionAttributes("cart")
 class OrderController {
+	private boolean agbCheck= false; //damit wir nicht auf Kaufen button klicken können. bevor wir die agbs gelesen haben.
+
 
 	private final OrderManager<Order> orderManager;
 
@@ -83,9 +85,8 @@ class OrderController {
 	 * 
 	 * @param disc
 	 * @param number
-	 * @param session
-	 * @param modelMap
-	 * @return
+	 * @param cart
+	 * //@param modelMap
 	 */
 	@PostMapping("/cart")
 	String addDisc(@RequestParam("pid") Disc disc, @RequestParam("number") int number, @ModelAttribute Cart cart) {
@@ -125,6 +126,9 @@ class OrderController {
 	 */
 	@PostMapping("/checkout")
 	String buy(@ModelAttribute Cart cart, @LoggedIn Optional<UserAccount> userAccount) {
+		if (!agbCheck) //erst klicekn wenn agbs gelesen wurde
+			return "redirect:/cart"; //rucksprüng zu cart
+		agbCheck = false; // nachdem dem Kaufen wird boolean wieder auf False gesetzt.(user muss bei jedem Kauf der AGBs akzeptieren.
 
 		return userAccount.map(account -> {
 
@@ -144,6 +148,17 @@ class OrderController {
 		}).orElse("redirect:/cart");
 	}
 
+	@GetMapping("/count") // iterator
+	public String count(@ModelAttribute Cart cart){
+		int all = 0;
+		while (cart.iterator().hasNext()){
+			cart.iterator().next();
+			all++;
+		}
+		return "redirect:/navigation/";
+	}
+
+
 	@GetMapping("/orders")
 	@PreAuthorize("hasRole('ROLE_BOSS')")
 	String orders(Model model) {
@@ -152,4 +167,11 @@ class OrderController {
 
 		return "orders";
 	}
+	@GetMapping("/agbs") // unsere agbs methode
+	public String agbs(@RequestParam("getChecked") String check){
+		agbCheck = true; // erst wenn die Methode geführt wurde dann kann man auf Kaufen klicken
+		return "redirect:/cart";
+
+	}
+
 }

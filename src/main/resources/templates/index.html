@@ -22,7 +22,7 @@
     </header>
     <nav th:include="navigation :: navigation"></nav>
 
-    <h2 th:text="#{home.welcome}">Willkommen zu unserem Videoshop.</h2>
+    <h2 style="color:red" th:text="#{home.welcome}">Willkommen zu unserem Videoshop.</h2>
     <p sec:authorize="isAuthenticated()" th:text="${'Hallo ' + #authentication?.name}">Hallo Nutzer</p>
 </div>
 </body>
